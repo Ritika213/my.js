@@ -1,73 +1,77 @@
-class Student{
-    static count=0;
-    constructor(name,age,ph_number,marks){
-      this.name=name;
-      this.age=age;
-      this.ph_number=ph_number;
-      this.marks=marks;
-      Student.increaseStudentCount();
+//n a party of N people, each person is denoted by an integer. 
+//Couples are represented by the same number. Find out the only single person in the party of couples.
+
+Input: N = 5
+arr = [1, 2, 3, 2, 1]
+Output: 3
+Explaination //Only the number 3 is single.
+
+class Solution{
+    findSingle(n, arr){
+        //code here
+        let res=0;
+        for(let i=0;i<n;i++)
+        res=res^arr[i];
+        return res;
+    
     }
-    eligible() {
-    if (this.marks >= 40) {
-      console.log(`${this.name} age ${this.age} is eligible`);
-    } else {
-      console.log(`${this.name} age ${this.age} is not eligible`);
+}
+
+
+
+//Given an array of N distinct elements, the task is to find all elements in array except two greatest elements in sorted order.
+
+Input : 
+a = [2, 8, 7, 1, 5]
+Output :
+[1, 2 ,5 ]
+Explanation 
+//The output three elements have two or
+//more greater elements. 
+
+class Solution {
+    findElements(arr,n){
+       //code here
+       const newArr = new Array(arr.length - 2);
+    arr.sort((x, y) => x - y);
+    
+    for (let i = 0; i < arr.length - 2; i++) {
+        newArr[i] = arr[i];
     }
-  }
-  
-      static increaseStudentCount(){
-        Student.count++;
-      }
-      static printStudentCount(){
-        console.log(Student.count)
-      
+    
+    return newArr;
+
     }
-  }
-  const riya=new Student("riya",18,123445,67)
-  const siya=new Student("siya",13,123745,89)
-  const maya=new Student("maya",17,123845,30)
-  const sona=new Student("sona",16,123465,45)
-  
-  Student.printStudentCount();
-  
-  riya.eligible();
-  siya.eligible();
-  maya.eligible();
-  sona.eligible();
+}
 
 
 
-  Output:
+//Given a sorted array Arr of size N and a value X, find the number of array elements less than or equal to X and elements more
+ //than or equal to X. 
 
-4
-//riya age 18 is eligible
-//siya age 13 is eligible
-//maya age 17 is not eligible
-//sona age 16 is eligible
+Input:
+N = 7, X = 0
+Arr= [1, 2, 8, 10, 11, 12, 19]
+Output: //0 7
+Explanation //There are no elements less or
+//equal to 0 and 7 elements greater or equal
+//to 0.
 
-
-
-//wierd mystry
-class Student{
-    constructor(name,age,marks){
-      this.name=name;
-      this.age=age;
-      this.marks=marks;
-    }
-    setPlacementAge(minPlacementAge){
-      return (minMarks)=>{
-        if(this.marks>=minMarks && this.age>=minPlacementAge){
-          return true;
-        } else {
-         return false;
+class Solution{
+    getMoreAndLess(arr,n, x){
+        //code here
+        const count = [0, 0];
+    
+    
+    for (let i = 0; i < n; i++) {
+        if (x >= arr[i]) {
+            count[0]++;
         }
-      }
+        if (x <= arr[i]) {
+            count[1]++;
+        }
     }
-  }
-  function createNewStudents(name,age,marks){
-  const sonam=new Student(name,age,marks)
-  
-   console.log(sonam.setPlacementAge(14)(50))
-  }
-  
-  
+    
+    return count;
+}
+}

@@ -22,6 +22,7 @@ Constraints
 class Solution {
     Maximize(arr) {
         
+        
         // Sort the array in ascending order
         arr.sort((a, b) => a - b);
 

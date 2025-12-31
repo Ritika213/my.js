@@ -16,7 +16,8 @@ Output:// 7 -> 0
 Explanation:// Given numbers are 63 and 7. There sum is 70.
     
 Constraints
-//1 ≤ Number of nodes in head1, head2 ≤ 105
+//1 ≤ Number of nodes in head1, hea
+// d2 ≤ 105
 //0 ≤ node->data ≤ 9
 
 /**

@@ -1,0 +1,132 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>candy shop inventory</title>
+</head>
+
+<body>
+    <h1>Inventory management</h1>
+    <form onsubmit="saveToAxios(event)">
+        <label>Candy name</label>
+        <input type="text" id="name" name="name">
+        <label>Description</label>
+        <input type="text" id="description" name="description">
+        <label>Price</label>
+        <input type="text" id="price" name="price">
+        <label>Quantity</label>
+        <input type="text" id="quantity" name="quantity">
+        <label for="table"></label>
+        <button>Add Item</button>
+    </form>
+    <h2>Candylist</h2><br>
+    <ul id="list"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        async function saveToAxios(event) {
+            event.preventDefault();
+            const candyname = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const price = document.getElementById("price").value;
+            const quantity = document.getElementById("quantity").value;
+    
+            let item = {
+                candyname,
+                description,
+                price,
+                quantity
+            };
+    
+            try {
+                const response = await axios.post("https://crudcrud.com/api/acb5ddbf2567432aafbf9e8423e02bd9/itemlist", item);
+                addItemList(response.data);
+            } catch (err) {
+                document.body.innerHTML = document.body.innerHTML + "<h2> Something went wrong </h2>";
+                console.log(err);
+            }
+        }
+     
+        async function fetchItem() {
+            try {
+                const response = await axios.get("https://crudcrud.com/api/acb5ddbf2567432aafbf9e8423e02bd9/itemlist");
+                console.log(response);
+                const candyList = response.data;
+                const parentNode = document.getElementById("list");
+                
+                candyList.forEach((item) => {
+                    addItemList(item);
+                });
+            } catch (error) {
+                document.body.innerHTML += "<h2> Error Loading content .....</h2>";
+                console.log(error);
+            }
+        }
+    
+        window.addEventListener("DOMContentLoaded", fetchItem);
+    
+        function addItemList(item) {
+            const parentNode = document.getElementById("list");
+            const childHTML = `
+                <li id="${item._id}">
+                    ${item.candyname} - ${item.description} - ${item.price} - <span id="quantity-${item._id}">${item.quantity}</span>
+                    <button onclick="buyOne('${item._id}', '${item.candyname}', '${item.description}', '${item.price}')">Buy 1</button>
+                    <button onclick="buyMultiple('${item._id}', '${item.candyname}', '${item.description}', '${item.price}', 2)">Buy 2</button>
+                    <button onclick="buyMultiple('${item._id}', '${item.candyname}', '${item.description}', '${item.price}', 3)">Buy 3</button>
+                </li>
+            `;
+            parentNode.innerHTML += childHTML;
+        }
+    
+        async function buyOne(itemId, candyname, description, price) {
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            let quantity = parseInt(quantityElement.innerText);
+    
+            if (quantity > 0) {
+                quantity--;
+                quantityElement.innerText = quantity;
+    
+                try {
+                    await axios.put(`https://crudcrud.com/api/acb5ddbf2567432aafbf9e8423e02bd9/itemlist/${itemId}`, { quantity, candyname, description, price });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                try {
+                    throw new Error("Item is out of stock.");
+                } catch (error) {
+                    console.log(error);
+                    alert(error.message);
+                }
+            }
+        }
+    
+        async function buyMultiple(itemId, candyname, description, price, quantity) {
+            const quantityElement = document.getElementById(`quantity-${itemId}`);
+            let currentQuantity = parseInt(quantityElement.innerText);
+    
+            if (currentQuantity >= quantity) {
+                const newQuantity = currentQuantity - quantity;
+                quantityElement.innerText = newQuantity;
+    
+                try {
+                    await axios.put(`https://crudcrud.com/api/acb5ddbf2567432aafbf9e8423e02bd9/itemlist/${itemId}`, { quantity: newQuantity, candyname, description, price });
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                try {
+                    throw new Error("Item is out of stock.");
+                } catch (error) {
+                    console.log(error);
+                    alert(error.message);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
